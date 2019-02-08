@@ -1,0 +1,25 @@
+{
+  "development": {
+    "username": "root",
+    "password": null,
+    "database": "nodelabel",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "nodelabel",
+    "host": "localhost",
+    "dialect": "mysql",
+    "operatorsAliases": false
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "nodelabel",
+    "host": "localhost",
+    "dialect": "mysql",
+    "operatorsAliases": false
+  }
+}
