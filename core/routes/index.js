@@ -2,53 +2,18 @@
 
 const express = require("express");
 const router = express.Router();
-var auth = require('basic-auth');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const User = require("../../database/models").User;
 const Sequelize = require('sequelize');
-
-const authy = (req, res, next) => {
-    const credentials = auth(req)
-
-    if (credentials) {
-
-        User.findOne({
-            where: {email: credentials.name}
-        }).done(function(user, error) {
-
-            if (error) {
-                console.warn('error in DB search');
-                message = 'error in DB search';
-            }
-
-            if (user) {
-                // We found a user with this email address.
-                // Pass the error to the next method.
-                const authenticated = bcrypt.compareSync(credentials.pass, user.password);
-
-                if (!authenticated) {
-                    res.status(401).json({message: 'Access Denied'})
-                } else {
-                    req.currentUser = user;
-                    next();
-                }
-
-            } else {
-                message = 'User not found';
-            }
-        })
-    } else {
-        message = 'Auth header not found';
-    }
-}
+const authy = require('../modules/auth').authy;
 
 router.get('/log-in', (req, res, next) => {
     res.json({message: 'Welcome!'})
 })
 
 router.post('/log-in', authy, (req, res, next) => {
-    res.json({message: 'Welcome! you have logged in'})
+    res.json({message: 'Welcome! you have logged in. You can now go to /users'})
 })
 
 router.post('/sign-up', (req, res, next) => {
