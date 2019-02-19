@@ -10,6 +10,7 @@ const authy = require('../modules/auth').authy;
 
 router.get('/log-in', (req, res, next) => {
     const user = req.user;
+
     if (user) {
         res.location('/api/users').sendStatus(200);
     } else {
@@ -48,7 +49,6 @@ router.post('/sign-up', (req, res, next) => {
 
             User.create(data).then( (user)=> {
                 if (user) {
-                    console.log('user: ', user)
                     res.json({data: user})
                 }
             })

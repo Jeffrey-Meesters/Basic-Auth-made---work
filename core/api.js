@@ -1,4 +1,6 @@
 'use strict';
+// reguire environment configuration
+require('dotenv').config()
 
 // https://expressjs.com/en/4x/api.html
 const express = require('express');
@@ -15,10 +17,16 @@ const routes = require("./routes/index");
 // variable to enable global error logging
 const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'true';
 
+// https://www.npmjs.com/package/cookie-parser
+var cookieParser = require('cookie-parser');
+
 const app = express();
 
 // parse application/json
 app.use(bodyParser.json());
+
+// Use cookieParser so it is available
+app.use(cookieParser(process.env.COOKERT));
 
 // all routes will start with '/api'
 app.use('/api', routes);
