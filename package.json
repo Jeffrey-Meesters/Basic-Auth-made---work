@@ -2,7 +2,7 @@
   "name": "nodelabel",
   "version": "1.0.0",
   "description": "",
-  "main": "code/app.js",
+  "main": "code/api.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node core/app.js"
