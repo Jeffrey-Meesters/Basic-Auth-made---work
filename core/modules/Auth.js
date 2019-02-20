@@ -1,35 +1,31 @@
 const auth = require('basic-auth');
 const User = require("../../database/models").User;
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-const createCookie = function(res, next, credentials) {
-    bcrypt.hash(`${credentials.name}`, 10, function(err, hash) {
-        if (err) {
-            console.log('Cookie hash breaks!!', err)
-            const error = new Error("Cookie hashing breaks!!");
-            error.status = 500;
-            return  next(error);
-        }
+const tokenSecret = "yolo";
 
-        const options = {
-            maxAge: 1000 * 60 * 15, // 15 minutes
-            httpOnly: true,
-            signed: true
-        }
+const tokenCreator = (res, next, user) => {
 
-        res.cookie(`aTok`, hash, options);
-        next();
-    })
+    payload = {
+        sub: user.name,
+        name: "yolo"
+    }
+
+    jwt.sign(payload, tokenSecret, { expiresIn: '1h' });
+
+    if (jwt) {
+        console.log(jwt);
+        res.status(200).json({'token': jwt});
+    } else {
+        const error = new Error("Something went wrong wile creating a token");
+        error.status(500);
+        next(error)
+    }
 }
 
 exports.authy = (req, res, next) => {
     const credentials = auth(req)
-    const cookie = req.cookies;
-
-    if (cookie) {
-        console.log(req.cookies)
-    }
-
     if (credentials) {
 
         User.findOne({
@@ -49,7 +45,7 @@ exports.authy = (req, res, next) => {
                     res.status(401).json({message: 'Access Denied'})
                 } else {
                     req.currentUser = user;
-                    createCookie(res, next, credentials);
+                    tokenCreator(res, next, user)
                 }
 
             } else {
